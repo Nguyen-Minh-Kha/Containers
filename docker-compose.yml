@@ -1,0 +1,25 @@
+# create services on a docker swarm
+services:
+  web:
+    image: httpd
+    ports:
+      - 80:80
+    deploy: 
+      replicas: 5
+      limits:
+        cpus: "0.1"
+        memory: 50M
+  debug:
+    image: alpine:latest
+    command: ["sleep", "30"]
+    deploy:
+      mode: global
+  viz:
+    image: dockersamples/visualizer
+    ports:
+      -80:80
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    placement:
+      constraints: [node.role == manager]
+    
